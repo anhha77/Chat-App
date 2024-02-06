@@ -1,10 +1,11 @@
+import { Typography } from "@mui/material";
 import React from "react";
 
 function MainFooter() {
   return (
-    <div>
-      <h1>Main Footer</h1>
-    </div>
+    <Typography variant="body2" color="text.secondary" align="center" p={1}>
+      anhha77
+    </Typography>
   );
 }
 

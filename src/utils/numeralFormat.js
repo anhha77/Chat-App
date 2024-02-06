@@ -5,7 +5,7 @@ export function fCurrency(number) {
 }
 
 export function fPercent(number) {
-  return numeral(number).format();
+  return numeral(number / 100).format("0.0%");
 }
 
 export function fShortenNumber(number) {
@@ -14,4 +14,8 @@ export function fShortenNumber(number) {
 
 export function fData(number) {
   return numeral(number).format("0.0 b");
+}
+
+export function fNumber(number) {
+  return numeral(number).format();
 }
