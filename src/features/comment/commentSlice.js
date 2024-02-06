@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiService from "../../app/apiService";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const initialState = {
   isLoading: false,
@@ -54,6 +56,32 @@ export const createReaction = createAsyncThunk(
   }
 );
 
+export const deleteComment = createAsyncThunk(
+  "comment/deleteComment",
+  async ({ commentId, postId }, thunkAPI) => {
+    try {
+      await apiService.delete(`comments/${commentId}`);
+      thunkAPI.dispatch(getComments({ postId, page: 1 }));
+      return commentId;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const updateComment = createAsyncThunk(
+  "comment/updateComment",
+  async ({ commentId, postId, content }, thunkAPI) => {
+    try {
+      const response = await apiService.put(`/comments/${commentId}`, {
+        content,
+      });
+      thunkAPI.dispatch(getComments({ postId, page: 1 }));
+      return { ...response.data.data };
+    } catch (error) {}
+  }
+);
+
 const slice = createSlice({
   name: "comment",
   initialState,
@@ -98,6 +126,37 @@ const slice = createSlice({
       })
       .addCase(createReaction.rejected, (state, action) => {
         state.error = action.error.message;
+      });
+
+    builder
+      .addCase(deleteComment.pending, (state) => {})
+      .addCase(deleteComment.fulfilled, (state) => {
+        Swal.fire({
+          title: "Update Successfully",
+          icon: "success",
+          confirmButtonColor: "#54D62C",
+        });
+      })
+      .addCase(deleteComment.rejected, (state, action) => {
+        Swal.fire({
+          title: "Error",
+          text: action.error.message,
+          icon: "error",
+          confirmButtonColor: "#54D62C",
+        });
+      });
+
+    builder
+      .addCase(updateComment.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateComment.fulfilled, (state, action) => {
+        state.isLoading = false;
+        toast.success("Update Successfully");
+      })
+      .addCase(updateComment.rejected, (state, action) => {
+        state.isLoading = false;
+        toast.error = action.error.message;
       });
   },
 });

@@ -9,7 +9,7 @@ import {
   sendFriendRequest,
 } from "./friendSlice";
 
-function ActionButton({ currentUserId, targetUserId, friendship, type, sx }) {
+function ActionButton({ currentUserId, targetUserId, friendship, sx }) {
   const dispatch = useDispatch();
 
   if (currentUserId === targetUserId) return null;
@@ -33,7 +33,7 @@ function ActionButton({ currentUserId, targetUserId, friendship, type, sx }) {
       size="small"
       variant="contained"
       color="error"
-      onClick={() => dispatch(unFriend({ targetUserId, type }))}
+      onClick={() => dispatch(unFriend({ targetUserId }))}
     >
       Unfriend
     </Button>
@@ -50,7 +50,11 @@ function ActionButton({ currentUserId, targetUserId, friendship, type, sx }) {
   );
   const btnCancelRequest = (
     <Button
-      sx={{ fontSize: "0.6rem", ...sx }}
+      sx={{
+        fontSize: "0.6rem",
+        ...sx,
+        width: "100px",
+      }}
       size="small"
       variant="contained"
       color="error"
@@ -66,7 +70,7 @@ function ActionButton({ currentUserId, targetUserId, friendship, type, sx }) {
         size="small"
         variant="contained"
         color="success"
-        onClick={() => dispatch(acceptRequest({ targetUserId, type }))}
+        onClick={() => dispatch(acceptRequest({ targetUserId }))}
       >
         Accept
       </Button>
@@ -74,7 +78,7 @@ function ActionButton({ currentUserId, targetUserId, friendship, type, sx }) {
         size="small"
         variant="outlined"
         color="error"
-        onClick={() => dispatch(declineRequest({ targetUserId, type }))}
+        onClick={() => dispatch(declineRequest({ targetUserId }))}
       >
         Decline
       </Button>

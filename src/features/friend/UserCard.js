@@ -6,7 +6,7 @@ import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import useAuth from "../../hooks/useAuth";
 import ActionButton from "./ActionButton";
 
-function UserCard({ profile, type }) {
+function UserCard({ profile }) {
   const { user } = useAuth();
   const currentUserId = user._id;
   const { _id: targetUserId, name, avatarUrl, email, friendship } = profile;
@@ -16,7 +16,7 @@ function UserCard({ profile, type }) {
       currentUserId={currentUserId}
       targetUserId={targetUserId}
       friendship={friendship}
-      type={type}
+      sx={{ flexShrink: 0 }}
     />
   );
 

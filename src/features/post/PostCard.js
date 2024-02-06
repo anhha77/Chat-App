@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { fDate } from "../../utils/formatTime";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -27,6 +27,7 @@ function PostCard({ post, userId }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const dispatch = useDispatch();
   const { user } = useAuth();
+  const location = useLocation();
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -48,7 +49,6 @@ function PostCard({ post, userId }) {
     }).then((result) => {
       if (result.isConfirmed) {
         if (action === "delete") {
-          console.log("1");
           dispatch(deletePost({ postId: post._id, userId }));
         }
       }
@@ -74,8 +74,10 @@ function PostCard({ post, userId }) {
       <MenuItem onClick={handleMenuClose}>
         <Box
           flexGrow={1}
-          sx={{ color: "text.secondary" }}
-          onClick={windowPopup}
+          sx={{ color: "text.secondary", textDecoration: "none" }}
+          component={RouterLink}
+          to={`/postUpdate/${post._id}`}
+          state={{ background: location }}
         >
           Update Post
         </Box>

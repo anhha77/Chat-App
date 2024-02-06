@@ -6,11 +6,13 @@ const initialState = {
   isLoading: false,
   error: null,
   currentPageUsers: [],
-  currentPageFriends: [],
-  currentPageFriendRequests: [],
+  // currentPageFriends: [],
+  // currentPageFriendRequests: [],
+  // currentPageFriendRequestsSent: [],
   usersById: {},
-  friendsById: {},
-  friendRequestsById: {},
+  // friendsById: {},
+  // friendRequestsById: {},
+  // friendRequestsSentById: {},
   totalPages: 1,
 };
 
@@ -45,13 +47,14 @@ export const sendFriendRequest = createAsyncThunk(
 
 export const declineRequest = createAsyncThunk(
   "friend/declineRequest",
-  async ({ targetUserId, type }) => {
+  async ({ targetUserId }, thunkAPI) => {
     try {
       const response = await apiService.put(
         `/friends/requests/${targetUserId}`,
         { status: "declined" }
       );
-      return { ...response.data, targetUserId, type };
+      thunkAPI.dispatch(getFriendRequestsIncomming({ page: 1 }));
+      return { ...response.data, targetUserId };
     } catch (error) {
       console.log(error);
     }
@@ -60,13 +63,14 @@ export const declineRequest = createAsyncThunk(
 
 export const acceptRequest = createAsyncThunk(
   "friend/acceptRequest",
-  async ({ targetUserId, type }) => {
+  async ({ targetUserId }, thunkAPI) => {
     try {
       const response = await apiService.put(
         `/friends/requests/${targetUserId}`,
         { status: "accepted" }
       );
-      return { ...response.data, targetUserId, type };
+      thunkAPI.dispatch(getFriendRequestsIncomming({ page: 1 }));
+      return { ...response.data, targetUserId };
     } catch (error) {
       console.log(error);
     }
@@ -75,11 +79,12 @@ export const acceptRequest = createAsyncThunk(
 
 export const cancelRequest = createAsyncThunk(
   "friend/cancelRequest",
-  async ({ targetUserId }) => {
+  async ({ targetUserId }, thunkAPI) => {
     try {
       const response = await apiService.delete(
         `/friends/requests/${targetUserId}`
       );
+      thunkAPI.dispatch(getFriendRequestsOutgoing({ page: 1 }));
       return { ...response.data, targetUserId };
     } catch (error) {
       console.log(error);
@@ -89,10 +94,11 @@ export const cancelRequest = createAsyncThunk(
 
 export const unFriend = createAsyncThunk(
   "friend/unFriend",
-  async ({ targetUserId, type }) => {
+  async ({ targetUserId }, thunkAPI) => {
     try {
       const response = await apiService.delete(`/friends/${targetUserId}`);
-      return { ...response.data, targetUserId, type };
+      thunkAPI.dispatch(getFriends({ page: 1 }));
+      return { ...response.data, targetUserId };
     } catch (error) {
       console.log(error);
     }
@@ -120,6 +126,22 @@ export const getFriendRequestsIncomming = createAsyncThunk(
       const params = { page, limit: 10 };
       if (filterName) params.name = filterName;
       const response = await apiService.get("/friends/requests/incoming", {
+        params,
+      });
+      return response.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const getFriendRequestsOutgoing = createAsyncThunk(
+  "friend/getFriendRequestsOutgoing",
+  async ({ filterName, page }) => {
+    try {
+      const params = { page, limit: 10 };
+      if (filterName) params.name = filterName;
+      const response = await apiService.get("/friends/requests/outgoing", {
         params,
       });
       return response.data.data;
@@ -173,13 +195,8 @@ const slice = createSlice({
       })
       .addCase(declineRequest.fulfilled, (state, action) => {
         state.isLoading = false;
-        const { data, targetUserId, type } = action.payload;
-        if (type === "friendRequest") {
-          state.friendRequestsById[targetUserId].friendship = data;
-        } else {
-          state.usersById[targetUserId].friendship = data;
-        }
-
+        const { data, targetUserId } = action.payload;
+        state.usersById[targetUserId].friendship = data;
         toast.success("Request Declined");
       })
       .addCase(declineRequest.rejected, (state, action) => {
@@ -194,13 +211,8 @@ const slice = createSlice({
       })
       .addCase(acceptRequest.fulfilled, (state, action) => {
         state.isLoading = false;
-        const { data, targetUserId, type } = action.payload;
-        if (type === "friendRequest") {
-          state.friendRequestsById[targetUserId].friendship = data;
-        } else {
-          state.usersById[targetUserId].friendship = data;
-        }
-
+        const { data, targetUserId } = action.payload;
+        state.usersById[targetUserId].friendship = data;
         toast.success("Request Accepted");
       })
       .addCase(acceptRequest.rejected, (state, action) => {
@@ -231,13 +243,8 @@ const slice = createSlice({
       })
       .addCase(unFriend.fulfilled, (state, action) => {
         state.isLoading = false;
-        const { targetUserId, type } = action.payload;
-        if (type === "friendList") {
-          state.friendsById[targetUserId].friendship = null;
-        } else {
-          state.usersById[targetUserId].friendship = null;
-        }
-
+        const { targetUserId } = action.payload;
+        state.usersById[targetUserId].friendship = null;
         toast.success("Unfriend Success");
       })
       .addCase(unFriend.rejected, (state, action) => {
@@ -253,8 +260,8 @@ const slice = createSlice({
       .addCase(getFriends.fulfilled, (state, action) => {
         state.isLoading = false;
         const { users, totalPages, count } = action.payload;
-        state.currentPageFriends = users.map((user) => user._id);
-        users.forEach((user) => (state.friendsById[user._id] = user));
+        state.currentPageUsers = users.map((user) => user._id);
+        users.forEach((user) => (state.usersById[user._id] = user));
         state.totalPages = totalPages;
         state.totalUsers = count;
       })
@@ -270,12 +277,29 @@ const slice = createSlice({
       .addCase(getFriendRequestsIncomming.fulfilled, (state, action) => {
         state.isLoading = false;
         const { users, totalPages, count } = action.payload;
-        state.currentPageFriendRequests = users.map((user) => user._id);
-        users.forEach((user) => (state.friendRequestsById[user._id] = user));
+        state.currentPageUsers = users.map((user) => user._id);
+        users.forEach((user) => (state.usersById[user._id] = user));
         state.totalPages = totalPages;
         state.totalUsers = count;
       })
       .addCase(getFriendRequestsIncomming.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+
+    builder
+      .addCase(getFriendRequestsOutgoing.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getFriendRequestsOutgoing.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { users, totalPages, count } = action.payload;
+        state.currentPageUsers = users.map((user) => user._id);
+        users.forEach((user) => (state.usersById[user._id] = user));
+        state.totalPages = totalPages;
+        state.totalUsers = count;
+      })
+      .addCase(getFriendRequestsOutgoing.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

@@ -17,9 +17,10 @@ function FriendList() {
   const [filterName, setFilterName] = useState("");
   const [page, setPage] = React.useState(1);
 
-  const { currentPageFriends, friendsById, totalUsers, totalPages } =
-    useSelector((state) => state.friend);
-  const users = currentPageFriends.map((userId) => friendsById[userId]);
+  const { currentPageUsers, usersById, totalUsers, totalPages } = useSelector(
+    (state) => state.friend
+  );
+  const users = currentPageUsers.map((userId) => usersById[userId]);
 
   const dispatch = useDispatch();
 
@@ -65,7 +66,7 @@ function FriendList() {
         <Grid container spacing={3} my={1}>
           {users.map((user) => (
             <Grid key={user._id} item xs={12} md={4}>
-              <UserCard profile={user} type="friendList" />
+              <UserCard profile={user} />
             </Grid>
           ))}
         </Grid>

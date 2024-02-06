@@ -12,6 +12,8 @@ import FriendList from "../features/friend/FriendList";
 import FriendRequests from "../features/friend/FriendRequests";
 import { styled } from "@mui/material/styles";
 import { capitalCase } from "change-case";
+import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
+import SentFriendRequests from "../features/friend/SentFriendRequests";
 
 const TabsWrapperStyle = styled("div")(({ theme }) => ({
   zIndex: 9,
@@ -52,6 +54,11 @@ function HomePage() {
       value: "requests",
       icon: <ContactMailIcon sx={{ fontSize: 24 }} />,
       component: <FriendRequests />,
+    },
+    {
+      value: "request_sent",
+      icon: <ScheduleSendIcon sx={{ fontSize: 24 }} />,
+      component: <SentFriendRequests />,
     },
     {
       value: "add_friend",

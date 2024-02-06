@@ -9,7 +9,7 @@ import {
   Container,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getFriendRequestsIncomming } from "./friendSlice";
+import { getFriendRequestsOutgoing } from "./friendSlice";
 import SearchInput from "../../components/SearchInput";
 import UserCard from "./UserCard";
 
@@ -29,7 +29,7 @@ function FriendRequests() {
   };
 
   useEffect(() => {
-    dispatch(getFriendRequestsIncomming({ filterName, page }));
+    dispatch(getFriendRequestsOutgoing({ filterName, page }));
   }, [filterName, page, dispatch]);
 
   return (

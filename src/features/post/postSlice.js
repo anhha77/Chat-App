@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 const initialState = {
   isLoadingPostBtn: false,
   isLoadingLoadMoreBtn: false,
+  isLoadingUpdate: false,
   error: null,
   postsById: {},
   currentPagePosts: [],
@@ -65,9 +66,28 @@ export const deletePost = createAsyncThunk(
   "post/deletePost",
   async ({ postId, userId }, thunkAPI) => {
     try {
-      console.log("hi");
       await apiService.delete(`/posts/${postId}`);
       thunkAPI.dispatch(getPosts({ userId, page: 1, limit: 2 }));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const updatePost = createAsyncThunk(
+  "post/updatePost",
+  async ({ postId, content, image, userId }, thunkAPI) => {
+    try {
+      let params = {};
+      if (image instanceof File) {
+        const imageUrl = await cloudinaryUpload(image);
+        params = { content, image: imageUrl };
+      } else {
+        params = { content, image };
+      }
+      const response = await apiService.put(`/posts/${postId}`, params);
+      thunkAPI.dispatch(getPosts({ userId, page: 1 }));
+      return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -152,6 +172,20 @@ const slice = createSlice({
           icon: "error",
           confirmButtonColor: "#54D62C",
         });
+      });
+
+    builder
+      .addCase(updatePost.pending, (state) => {
+        state.isLoadingUpdate = true;
+      })
+      .addCase(updatePost.fulfilled, (state) => {
+        state.isLoadingUpdate = false;
+        // toast.success("Update Successfully");
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.isLoadingUpdate = false;
+        // toast.error = action.error.message;
+        state.error = action.error.message;
       });
   },
 });

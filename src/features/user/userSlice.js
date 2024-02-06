@@ -87,7 +87,7 @@ const slice = createSlice({
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.updatedProfile = action.payload;
-        toast.success("Update Successful");
+        toast.success("Update Successfully");
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.isLoading = false;
