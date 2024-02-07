@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { isString } from "lodash";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import RejectionFiles from "./RejectionFiles";
+import AddAPhotoRoundedIcon from "@mui/icons-material/AddAPhotoRounded";
 
 const DropZoneStyle = styled("div")({
   zIndex: 0,
@@ -86,15 +87,20 @@ function UpdateImage({ error, file, helperText, sx, ...other }) {
           sx={{
             ...(file && {
               opacity: 0,
-              color: "common.white",
+              color: "black",
               bgcolor: "grey.900",
-              "&:hover": { opacity: 1 },
+              "&:hover": { opacity: 0.72 },
             }),
             ...((isDragReject || error) && {
               bgcolor: "error.lighter",
             }),
           }}
-        />
+        >
+          <AddAPhotoRoundedIcon sx={{ width: 24, height: 24, mb: 1 }} />
+          <Typography variant="caption">
+            {file ? "Update photo" : "Upload photo"}
+          </Typography>
+        </PlaceholderStyle>
       </DropZoneStyle>
       {helperText && helperText}
 
