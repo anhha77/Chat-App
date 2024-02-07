@@ -51,7 +51,7 @@ const reducer = (state, action) => {
       const {
         userId,
         name,
-        // avatarUrl,
+        avatarUrl,
         coverUrl,
         aboutMe,
         city,
@@ -69,7 +69,7 @@ const reducer = (state, action) => {
           ...state.user,
           userId,
           name,
-          // avatarUrl,
+          avatarUrl,
           coverUrl,
           aboutMe,
           city,
