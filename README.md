@@ -9,10 +9,10 @@ migration/migration-v4/" target="_blank"><img src="./images/Material UI.png" alt
 
 ## Demo Link
 
-You can use an account that have already created
-Username: kentucky772001@gmail.com
-Password: 1
-Or create a new one
+- You can use an account that have already created
+- Username: kentucky772001@gmail.com
+- Password: 1
+- Or create a new one
 
 [https://chat-app77.netlify.app](https://chat-app77.netlify.app)
 
