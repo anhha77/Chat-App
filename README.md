@@ -1,46 +1,282 @@
-# Getting Started with Create React App and Redux
+# Chat App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+An app that people can connect with other and share content such as posts and comments. This app also includes a range of features like allow users to create and manage their profiles, search for users, add friend them.
 
-## Available Scripts
+## User Stories
 
-In the project directory, you can run:
+1. As a user, I want to be able to sign up to create my profile
 
-### `npm start`
+2. As a user, I want to be able to log in (log out) of my account
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3. As a user, I want to be able to manage my profile by adding personal information, profile picture, and interests.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+4. As a user, I want to be able to search for and add friend with other users
 
-### `npm test`
+5. As a user, I want to be able to accept/deny following friend requests from other users.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+6. As a user, I want to be able to see a list of people that are my friends, friend request incoming and friend requests outgoing.
 
-### `npm run build`
+7. As a user, I want to be able to share my thoughts and interests by creating content.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+8. As a user, I want to be able to view my own posts as well as other users content.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+9. As a user, I want to be able to interact with content by liking, reacting, commenting, and sharing.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+10. As a user, I want to be able to edit or delete content, comments, shares or likes that I created.
 
-### `npm run eject`
+### Authentication
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- As a user, I can register for a new account with name, email, and password.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- As a user, I can sign in with my email and password.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- As a user, I can stay sign in with refreshing page.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Users
 
-## Learn More
+- As a user, I can see a list of other users so that I can send accept, or decide friend requests.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- As a user, I can get my current profile info (stay signed in after page refresh).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- As a user, I can see the profile of a specific user given a user ID.
+
+- As a user, I can update my profile info like Avatar, Company, Job Title, Social Links, and short description.
+
+### Posts
+
+- As a user, I can see a list of posts.
+
+- As a user, I can create a new post with text content and an image.
+
+- As a user, I can edit my posts.
+
+- As a user, I can delete my posts.
+
+### Comments
+
+- As a user, I can see a list of comments on a post.
+
+- As a user, I can write comments on a post.
+
+- As a user, I can update my comments.
+
+- As a user, I can delete my comments.
+
+### Reactions
+
+- As a user, I can react like or dislike to a post or comment.
+
+### Friends
+
+- As a user, I can send a friend request to another user who is not my friend.
+
+- As a user, I can see a list of friend requests I have received.
+
+- As a user, I can see a list of friend requests I have sent.
+
+- As a user, I can see a list of my friends.
+
+- As a user, I can accept or decline a friend request.
+
+- As a user, I can cancel a friend request I sent.
+
+- As a user, I can unfriend a user in my friend list.
+
+## Endpoint APIs
+
+### Auth APIs
+
+```javascript
+/**
+ * @route POST /auth/login
+ * @description Log in with email and password
+ * @body {email, password}
+ * @access Public
+ */
+```
+
+```javascript
+/**
+ * @route POST /users
+ * @description User Registration
+ * @body {name, email, password}
+ * @access Public
+ */
+```
+
+### User APIs
+
+```javascript
+/**
+ * @route GET /users?page=1&limit=10
+ * @description Get user with pagin
+ * @access Login required
+ */
+```
+
+```javascript
+/**
+ * @route GET /users/me
+ * @description Get current user info
+ * @access Login required
+ */
+```
+
+```javascript
+/**
+ * @route GET /users/:id
+ * @description Get a user profile
+ * @access Login required
+ */
+```
+
+```javascript
+/**
+ * @route PUT /users/:id
+ * @description Update user profile
+ * @body { name, avatarUrl, coverUrl, aboutMe, city, country, company, jobTitle, facebookLink, instagramLink, linkedinLink, twitterLink }
+ * @access Login required
+ */
+```
+
+### Post APIs
+
+```javascript
+/**
+ * @route GET /posts/user/:userId?page=1&limit=10
+ * @description Get all posts a user can see with pagination
+ * @access Login required
+ */
+```
+
+```javascript
+/**
+ * @route POST /posts
+ * @description Create a new post
+ * @body { content, image }
+ * @access login required
+ */
+```
+
+```javascript
+/**
+ * @route PUT /posts/:id
+ * @description Update a post
+ * @body { content, image }
+ * @access login required
+ */
+```
+
+```javascript
+/**
+ * @route DELETE /posts/:id
+ * @description Delete a post
+ * @access login required
+ */
+```
+
+### Comment APIs
+
+```javascript
+/**
+ * @route GET /comments/:id
+ * @description Get details of a comment
+ * @access Login require
+ */
+```
+
+```javascript
+/**
+ * @route POST /comments
+ * @description create a new comment
+ * @body { content, postId }
+ * @access Login required
+ * /
+```
+
+```javascript
+/**
+ * @route PUT /commnents/:id
+ * @description Update a comment
+ * @access Login required
+ * /
+```
+
+```javascript
+/**
+ * @route DELETE /commnents/:id
+ * @description Delete a comment
+ * @access Login required
+ * /
+```
+
+### Reaction APIs
+
+```javascript
+/**
+ * @route POST /reactions
+ * @description Save a reaction to post or comment
+ * @body { targetType: 'Post' or 'Comment', targetId, emoji: 'like' or 'dislike' }
+ * @access Login required
+ * /
+```
+
+### Friend APIs
+
+```javascript
+/**
+ * @route POST /firends/requests
+ * @description Sent a friend request
+ * @body {targetUserId: "userId"}
+ * @access Login Required
+ */
+```
+
+```javascript
+/**
+ * @route GET /friends/requests/incoming
+ * @description Get the list of received pending requests
+ * @access Login required
+ * /
+```
+
+```javascript
+/**
+ * @route GET /friends/requests/outgoing
+ * @description Get the list of received pending requests
+ * @access Login required
+ * /
+```
+
+```javascript
+/**
+ * @route GET /friends
+ * @description Get the list of friends
+ * @access Login required
+ * /
+```
+
+```javascript
+/**
+ * @route PUT /friends/requests/:userId
+ * @description Accept/Reject a received pending requests
+ * @body { status 'accepted' or 'declined' }
+ * @access Login required
+ * /
+```
+
+```javascript
+/**
+ * @route DELETE /friends/requests/:userId
+ * @description Cancel a friend request
+ * @access Login required
+ */
+```
+
+```javascript
+/**
+ * @route PUT /friends/:userId
+ * @description Remove a friend
+ * @access Login required
+ */
+```
