@@ -4,6 +4,7 @@ import { alpha } from "@mui/material/styles";
 import useAuth from "../../hooks/useAuth";
 import ActionButton from "../friend/ActionButton";
 import FriendStatus from "../friend/FriendStatus";
+import { useEffect } from "react";
 
 const RootStyle = styled("div")(({ theme }) => ({
   "&:before": {
@@ -90,7 +91,7 @@ function ProfileCover({ profile }) {
         >
           <Typography variant="h5">{name}</Typography>
           <Typography sx={{ opacity: 0.72 }}>{jobTitle}</Typography>
-          {friendStatus ? (
+          {friendship ? (
             friendStatus
           ) : (
             <ActionButton
