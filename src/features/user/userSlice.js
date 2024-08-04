@@ -66,11 +66,7 @@ export const updateUserProfile = createAsyncThunk(
 const slice = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    updateFriendshipStatus: (state, action) => {
-      state.selectedUser.friendship = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getUser.pending, (state) => {
@@ -101,5 +97,4 @@ const slice = createSlice({
   },
 });
 
-export const { updateFriendshipStatus } = slice.actions;
 export default slice.reducer;

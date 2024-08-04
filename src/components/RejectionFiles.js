@@ -3,6 +3,7 @@ import { fData } from "../utils/numeralFormat";
 import { alpha } from "@mui/material/styles";
 
 function RejectionFiles({ fileRejections }) {
+  console.log("Rejection", fileRejections);
   return (
     <Paper
       variant="outlined"

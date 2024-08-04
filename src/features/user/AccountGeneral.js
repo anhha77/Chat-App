@@ -72,7 +72,6 @@ function AccountGeneral() {
           <Card sx={{ py: 10, px: 3, textAlign: "center" }}>
             <FUploadAvatar
               name="avatarUrl"
-              accept="image/*"
               maxSize={3145728}
               onDrop={handleDrop}
               helperText={

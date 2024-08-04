@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiService from "../../app/apiService";
 import { toast } from "react-toastify";
-import { updateFriendshipStatus } from "../user/userSlice";
 
 const initialState = {
   isLoading: false,
@@ -33,13 +32,13 @@ export const getUsers = createAsyncThunk(
 
 export const sendFriendRequest = createAsyncThunk(
   "friend/sendFriendRequest",
-  async ({ targetUserId }, { thunkAPI }) => {
+  async ({ targetUserId }) => {
     try {
       const response = await apiService.post("/friends/requests", {
         to: targetUserId,
       });
-      console.log(response.data);
-      thunkAPI.dispatch(updateFriendshipStatus(response.data.data));
+      // console.log(response.data);
+
       return { ...response.data, targetUserId };
     } catch (error) {
       console.log(error);
